@@ -64,11 +64,11 @@ class AffectationPcService
         return ['msg' => 'Affectation Modifier !'];
     }
 
-    public function DeleteAffectation($data, $salarie_id): array
+    public function DeleteAffectation($data, $ord_id): array
     {
-        $salarie = Salarie::findOrFail($salarie_id);
-        if ($salarie->ordinateurs()->detach($data['ordinateur_id']))
-            $this->ChangePCAffecterState($data['ordinateur_id'], 'Non');
+        $salarie = Salarie::findOrFail($data['salarie_id']);
+        if ($salarie->ordinateurs()->detach($ord_id))
+            $this->ChangePCAffecterState($ord_id, 'Non');
 
         return ['msg' => 'Affectation Supprimer !'];
     }

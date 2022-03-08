@@ -17,7 +17,7 @@ class AffectationsController extends Controller
         $this->affectationPcService = $affectationPcService;
     }
 
-    public function index(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+    public function index()
     {
         return $this->affectationPcService->getAffectations();
     }
@@ -37,9 +37,9 @@ class AffectationsController extends Controller
         return $this->affectationPcService->UpdateAffectation($request->validated(),$salarie_id);
     }
 
-    public function destroy(Request $request, $salarie_id)
+    public function destroy(Request $request, $ord_id)
     {
-        return $this->affectationPcService->DeleteAffectation($request->all(),$salarie_id);
+        return $this->affectationPcService->DeleteAffectation($request->only('salarie_id'),$ord_id);
     }
 
     public function get_SN_Salaries(): array
