@@ -13,7 +13,7 @@ class Affectation  extends Pivot
 
     protected $casts = [
         'created_at' => 'datetime:m/d/Y',
-        'affected_at' => 'datetime:Y-m-d',
+        'affected_at' => 'datetime:Y/m/d',
         'updated_at' => 'datetime:m/d/Y',
 
     ];

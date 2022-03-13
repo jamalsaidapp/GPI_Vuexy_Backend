@@ -19,7 +19,6 @@ class AffecationsResource extends JsonResource
             'ordinateurs_count' => $this->ordinateurs_count,
             'sn' => $this->sn($this->ordinateurs),
             'ordinateur' => $this->ordinateurs,
-
         ];
     }
 

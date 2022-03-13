@@ -37,13 +37,13 @@ class AffectationPcService
         return ['msg' => 'Affectation Ajouter !'];
     }
 
-    public function UpdateAffectation($data, $salarie_id)
+    public function UpdateAffectation($data, $salarie_id): array
     {
         $ordinateur_id = $data['ordinateur_id'];
-        $old_ordinateur_id = $data['old_ordinateur_id'];
+//        $old_ordinateur_id = $data['old_ordinateur_id'];
         $salarie = Salarie::findOrFail($salarie_id);
 
-        if ($ordinateur_id !== $old_ordinateur_id) {
+        /*if ($ordinateur_id !== $old_ordinateur_id) {
            $salarie->ordinateurs()->detach([$old_ordinateur_id]);
 
             $this->ChangePCAffecterState($old_ordinateur_id, 'Non');
@@ -60,7 +60,14 @@ class AffectationPcService
                     'affected_at' => date('Y-m-d', strtotime($data['affected_at'])),
                     'remarque' => $data['remarque'] ?? null]
             ]);
-        }
+        }*/
+       $salarie->ordinateurs()->syncWithoutDetaching([
+            $ordinateur_id => [
+                'affected_at' => date('Y-m-d', strtotime($data['affected_at'])),
+                'remarque' => $data['remarque'] ?? null
+            ]
+        ]);
+
         return ['msg' => 'Affectation Modifier !'];
     }
 
