@@ -13,7 +13,7 @@ class Salarie extends Model
     use HasFactory, Userstamps, SoftDeletes;
 
     protected $fillable = [
-        'full_name',
+        'full_name', 'user_id', 'is_user', 'phone_id', 'cin'
     ];
 
     protected $casts = [
@@ -25,13 +25,32 @@ class Salarie extends Model
     public function ordinateurs()
     {
         return $this->belongsToMany(Ordinateur::class)->using(Affectation::class)
-            ->withTimestamps()->withPivot(['affected_at','remarque','created_by','updated_by']);
+            ->withTimestamps()->withPivot(['projet_id','affected_at','remarque','created_by','updated_by']);
     }
     public function ordinateurs_rendus()
     {
         return $this->belongsToMany(Ordinateur::class,'retour_salarie')->using(Rendu::class)
             ->withTimestamps()->withPivot(['affected_at','rendu_at','remarque','created_by','updated_by']);
     }
+    public function projets()
+    {
+        return $this->belongsToMany(Projet::class,'ordinateur_salarie')->using(Affectation::class)
+            ->withTimestamps()->withPivot(['created_by','updated_by']);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function phone()
+    {
+        return $this->belongsTo(Phone::class);
+    }
+
+
+
+
 
     public function setCreatedByAttribute()
     {

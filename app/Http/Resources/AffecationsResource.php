@@ -19,6 +19,9 @@ class AffecationsResource extends JsonResource
             'ordinateurs_count' => $this->ordinateurs_count,
             'sn' => $this->sn($this->ordinateurs),
             'ordinateur' => $this->ordinateurs,
+            'projets' => $this->projets($this->projets),
+            'created_at' => $this->created_at,
+            'created_at' => $this->created_at,
         ];
     }
 
@@ -32,5 +35,14 @@ class AffecationsResource extends JsonResource
         return implode(" , ", $series);;
     }
 
+    public function projets($projets): string
+    {
+        $names = [];
+        $count = count($projets);
+        for ($i = 0; $i < $count; $i++) {
+            $names[] = $projets[$i]->name;
+        }
+        return implode(" , ", $names);;
+    }
 
 }

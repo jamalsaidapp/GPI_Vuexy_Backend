@@ -6,9 +6,19 @@ namespace App\Http\Services;
 use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Support\Facades\Cache;
+use App\Http\JsonResponse;
+use mysql_xdevapi\Exception;
+
 
 class UserService
 {
+    private $response;
+
+    public function __construct()
+    {
+        $this->response = new JsonResponse();
+    }
+
     public function getUsers()
 
     {
@@ -32,30 +42,55 @@ class UserService
     public function CreateUser($data)
     {
         $newData = data_set($data, 'password', \Hash::make($data['password']));
-        $user = User::create($newData);
-        if ($data['role']) {
-            $user->assignRole($data['role']);
+        try {
+            $user = User::create($newData);
+            if ($data['role']) {
+                $this->handleRoles($user, $data['role']);
+            }
+            return $this->response->success('Utlisateur Ajouter !');
+        }catch (Exception $exception){
+            return $this->response->fail($exception->getMessage());
         }
-        return ['msg' => 'Utlisateur Ajouter !'];
     }
 
     public function UpdateUser($data, $user)
     {
-        if (isset($data['password'])) {
-            $newData = data_set($data, 'password', \Hash::make($data['password']));
-            $user->update($newData);
+        try {
+            if (isset($data['password'])) {
+                $newData = data_set($data, 'password', \Hash::make($data['password']));
+                $user->update($newData);
+            }
+
+            $user->update($data);
+            if (isset($data['role'])) {
+                $this->handleRoles($user, $data['role']);
+            }
+            return $this->response->success('Utlisateur Modifier !');
+        }catch (Exception $exception){
+            return $this->response->fail($exception->getMessage());
         }
-        $user->update($data);
-        if ($data['role']) {
-            $user->syncRoles($data['role']);
-        }
-        return ['msg' => 'Utlisateur Modifier !'];
     }
 
     public function DeleteUser($ids)
     {
-        $ids = explode(",", $ids);
-        User::destroy($ids);
-        return ['msg' => 'Utlisateur Supprimer !'];
+        $ids = explode(',', $ids);
+        $deleteAction =  User::destroy($ids);
+        if ($deleteAction) {
+            return $this->response->success('Utlisateur Supprimer !');
+        }
+        else{
+             User::withTrashed()->find($ids)->each(function ($user, $key) {
+                $user->forceDelete();
+            });
+            return $this->response->warning('Utlisateur a été supprimer définitivement !');
+        }
+    }
+
+    private function handleRoles($user, $role){
+        $roles = $user->getRoleNames();
+        if (in_array($role, array($roles)) ) {
+            $user->removeRole($role);
+        }
+        $user->syncRoles($role);
     }
 }

@@ -16,8 +16,9 @@ class SalarieHasOrdinateur extends Migration
         Schema::create('ordinateur_salarie', function (Blueprint $table) {
             $table->foreignId('ordinateur_id')->constrained();
             $table->foreignId('salarie_id')->constrained();
+            $table->foreignId('projet_id')->constrained();
             $table->dateTime('affected_at');
-            $table->string('remarque');
+            $table->string('remarque')->nullable();
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
             $table->timestamps();

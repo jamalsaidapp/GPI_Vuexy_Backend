@@ -34,6 +34,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('set_user_permissions/{id}', [App\Http\Controllers\API\Settings\PermissionController::class, 'setUserPermissions']);
 
     Route::apiResource('salaries', App\Http\Controllers\API\Settings\SalarieController::class);
+    Route::apiResource('phones', App\Http\Controllers\API\Settings\PhoneController::class);
+    Route::apiResource('projets', App\Http\Controllers\API\Settings\ProjetController::class);
     Route::apiResource('ordinateurs', App\Http\Controllers\API\Gestion_Pc\OrdinateurController::class);
     Route::apiResource('affectations', App\Http\Controllers\API\Gestion_Pc\AffectationsController::class);
     Route::apiResource('retours', App\Http\Controllers\API\Gestion_Pc\RetoursController::class);

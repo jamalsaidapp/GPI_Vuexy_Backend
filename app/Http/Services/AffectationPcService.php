@@ -11,10 +11,10 @@ use App\Models\User;
 
 class AffectationPcService
 {
-    public function getAffectations(): \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+    public function getAffectations()
     {
-        return AffecationsResource::collection(Salarie::whereHas('ordinateurs')->with('ordinateurs')->withCount('ordinateurs')->get());
-
+//        return Salarie::whereHas('ordinateurs')->with('ordinateurs')->with('projets')->withCount('ordinateurs')->get();
+        return AffecationsResource::collection(Salarie::whereHas('ordinateurs')->with('ordinateurs')->with('projets')->withCount('ordinateurs')->get());
     }
 
     public function ShowAffectation($Salarie_id)
@@ -28,11 +28,11 @@ class AffectationPcService
          return compact('full_name', 'ordinateurs','affected_by');
     }
 
-    public function CreateAffectation($data): array
+    public function CreateAffectation($data)
     {
         $ordinateur_id = $data['ordinateur_id'];
         $salarie = Salarie::findOrFail($data['salarie_id']);
-        $salarie->ordinateurs()->attach($ordinateur_id, ['affected_at' => date('Y-m-d', strtotime($data['affected_at'])), 'remarque' => $data['remarque'] ?? null]);
+        $salarie->ordinateurs()->attach($ordinateur_id, ['projet_id' => $data['projet_id'],'affected_at' => date('Y-m-d', strtotime($data['affected_at'])), 'remarque' => $data['remarque'] ?? null]);
         $this->ChangePCAffecterState($ordinateur_id, 'Oui');
         return ['msg' => 'Affectation Ajouter !'];
     }

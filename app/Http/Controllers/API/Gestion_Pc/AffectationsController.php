@@ -27,7 +27,7 @@ class AffectationsController extends Controller
         return $this->affectationPcService->ShowAffectation($Salarie_id);
     }
 
-    public function store(AffectationRequest $request): array
+    public function store(AffectationRequest $request)
     {
         return $this->affectationPcService->CreateAffectation($request->validated());
     }

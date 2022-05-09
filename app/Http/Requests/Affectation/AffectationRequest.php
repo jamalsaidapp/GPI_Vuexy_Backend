@@ -26,10 +26,8 @@ class AffectationRequest extends FormRequest
     {
         $rules = [];
 
-//       $ordinateur_id_rule = $this->ordinateur_id !== $this->old_ordinateur_id ? 'required|unique:ordinateur_salarie,ordinateur_id' : 'required';
-
         $rules['ordinateur_id'] = 'required';
-//        $rules['old_ordinateur_id'] = 'sometimes';
+        $rules['projet_id'] = 'required';
         $rules['salarie_id'] = 'required';
         $rules['affected_at'] = 'required|date';
         $rules['remarque'] = 'sometimes';

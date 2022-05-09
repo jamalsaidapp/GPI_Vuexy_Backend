@@ -24,7 +24,7 @@ class RoleController extends Controller
      */
     public function index()
     {
-        return $this->roleService->getRoles(); 
+        return $this->roleService->getRoles();
     }
 
     /**
@@ -36,12 +36,12 @@ class RoleController extends Controller
     {
         return $this->roleService->CreateRole($request->validated()) ;
     }
-   
+
     public function show($id)
     {
         //
     }
-    
+
 
     /**
      * Update the specified resource in storage.
@@ -59,10 +59,10 @@ class RoleController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return string[]
      */
-    public function destroy($id)
+    public function destroy($id): array
     {
-        //
+        return ['msg' => 'Role Supprimer !'];
     }
 }

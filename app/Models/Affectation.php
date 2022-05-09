@@ -15,7 +15,6 @@ class Affectation  extends Pivot
         'created_at' => 'datetime:m/d/Y',
         'affected_at' => 'datetime:Y/m/d',
         'updated_at' => 'datetime:m/d/Y',
-
     ];
 
     public function setCreatedByAttribute()

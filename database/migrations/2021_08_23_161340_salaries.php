@@ -16,9 +16,13 @@ class Salaries extends Migration
         Schema::create('salaries', function (Blueprint $table) {
             $table->id();
             $table->string('full_name')->unique();
-            $table->unsignedBigInteger('created_by')->nullable();
-            $table->unsignedBigInteger('updated_by')->nullable();
-            $table->unsignedBigInteger('deleted_by')->nullable();
+            $table->string('cin')->unique();
+            $table->foreignId('user_id')->nullable()->constrained();
+            $table->foreignId('phone_id')->nullable()->constrained();
+            $table->boolean('is_user')->default(0);
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
+            $table->string('deleted_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

@@ -6,6 +6,7 @@ namespace App\Http\Services;
 
 use App\Models\User;
 use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class PermissionService
 {
@@ -30,14 +31,15 @@ class PermissionService
     {
         $user= User::findOrFail($id);
         $permissions = $user->getAllPermissions();
-        $initialPerms = Permission::all();
-        return compact('permissions','initialPerms');
+        $permissionsViaRoles = $user->getPermissionsViaRoles();
+        $initialPerms = Permission::where('subject','!=', 'all')->get();
+        return compact('permissions','initialPerms','permissionsViaRoles');
     }
 
-    public function setUserPermissions($permissions,$id)
+    public function setUserPermissions($permissions,$id): array
     {
         $user= User::findOrFail($id);
         $user->syncPermissions($permissions);
-        return ['msg' => 'Permissions Affecter !'];
+        return ['msg' => 'Permissions Affecter !f'];
     }
 }

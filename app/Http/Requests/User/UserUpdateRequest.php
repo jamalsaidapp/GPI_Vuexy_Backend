@@ -29,6 +29,7 @@ class UserUpdateRequest extends FormRequest
             'email' => 'required|string|email|max:191|unique:users,email,' . $this->id,
             'password' => 'sometimes|string|min:6',
             'status' => 'required',
+            'role' => 'sometimes'
         ];
     }
 }

@@ -28,4 +28,5 @@ class RoleService
     $role->syncPermissions($permissions);
     return ['msg' => 'Role Modifier !'];
   }
+
 }
