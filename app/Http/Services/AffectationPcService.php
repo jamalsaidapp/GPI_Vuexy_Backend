@@ -5,64 +5,64 @@ namespace App\Http\Services;
 
 
 use App\Http\Resources\AffecationsResource;
-use App\Models\Ordinateur;
-use App\Models\Salarie;
-use App\Models\User;
+use App\Models\Laptop;
+use App\Models\Salary;
 
 class AffectationPcService
 {
     public function getAffectations()
     {
-//        return Salarie::whereHas('ordinateurs')->with('ordinateurs')->with('projets')->withCount('ordinateurs')->get();
-        return AffecationsResource::collection(Salarie::whereHas('ordinateurs')->with('ordinateurs')->with('projets')->withCount('ordinateurs')->get());
+        return AffecationsResource::collection(Salary::whereHas('affected_laptops')->with('affected_laptops')->with('affected_projets')->withCount('affected_laptops')->get());
     }
 
-    public function ShowAffectation($Salarie_id)
+    public function ShowAffectation($salary_id)
     {
 
-        $salarie = Salarie::findOrFail($Salarie_id);
-        $full_name = $salarie->full_name;
-        $ordinateurs = $salarie->ordinateurs()->get();
+        $salary = Salary::findOrFail($salary_id);
+        $full_name = $salary->full_name;
+        $laptops = $salary->affected_laptops()->get();
         $affected_by = auth()->user()->getUserFullName();
 
-         return compact('full_name', 'ordinateurs','affected_by');
+         return compact('full_name', 'affected_laptops','affected_by');
     }
 
     public function CreateAffectation($data)
     {
-        $ordinateur_id = $data['ordinateur_id'];
-        $salarie = Salarie::findOrFail($data['salarie_id']);
-        $salarie->ordinateurs()->attach($ordinateur_id, ['projet_id' => $data['projet_id'],'affected_at' => date('Y-m-d', strtotime($data['affected_at'])), 'remarque' => $data['remarque'] ?? null]);
-        $this->ChangePCAffecterState($ordinateur_id, 'Oui');
+        $laptop_id = $data['laptop_id'];
+        $salary = Salary::findOrFail($data['salary_id']);
+        $salary->affected_laptops()->attach($laptop_id, ['projet_id' => $data['projet_id'],
+            'affected_at' => date('Y-m-d', strtotime($data['affected_at'])), 'remarque' => $data['remarque'] ?? null]);
+        $this->ChangePCAffecterState($laptop_id, 'Oui');
         return ['msg' => 'Affectation Ajouter !'];
+
     }
 
-    public function UpdateAffectation($data, $salarie_id): array
+    public function UpdateAffectation($data, $salary_id): array
     {
-        $ordinateur_id = $data['ordinateur_id'];
-//        $old_ordinateur_id = $data['old_ordinateur_id'];
-        $salarie = Salarie::findOrFail($salarie_id);
+        $laptop_id = $data['laptop_id'];
+//        $old_laptop_id = $data['old_laptop_id'];
+        $salary = Salary::findOrFail($salary_id);
 
-        /*if ($ordinateur_id !== $old_ordinateur_id) {
-           $salarie->ordinateurs()->detach([$old_ordinateur_id]);
+        /*if ($laptop_id !== $old_laptop_id) {
+           $salary->affected_laptops()->detach([$old_laptop_id]);
 
-            $this->ChangePCAffecterState($old_ordinateur_id, 'Non');
+            $this->ChangePCAffecterState($old_laptop_id, 'Non');
 
-                $salarie->ordinateurs()->attach($ordinateur_id, [
+                $salary->affected_laptops()->attach($laptop_id, [
                     'affected_at' => date('Y-m-d', strtotime($data['affected_at'])),
                     'remarque' => $data['remarque'] ?? null]);
 
-            $this->ChangePCAffecterState($ordinateur_id, 'Oui');
+            $this->ChangePCAffecterState($laptop_id, 'Oui');
 
         } else {
-            $salarie->ordinateurs()->syncWithoutDetaching([
-                $ordinateur_id => [
+            $salary->affected_laptops()->syncWithoutDetaching([
+                $laptop_id => [
                     'affected_at' => date('Y-m-d', strtotime($data['affected_at'])),
                     'remarque' => $data['remarque'] ?? null]
             ]);
         }*/
-       $salarie->ordinateurs()->syncWithoutDetaching([
-            $ordinateur_id => [
+       $salary->affected_laptops()->syncWithoutDetaching([
+            $laptop_id => [
                 'affected_at' => date('Y-m-d', strtotime($data['affected_at'])),
                 'remarque' => $data['remarque'] ?? null
             ]
@@ -71,26 +71,35 @@ class AffectationPcService
         return ['msg' => 'Affectation Modifier !'];
     }
 
-    public function DeleteAffectation($data, $ord_id): array
+    public function DeleteAffectation($data, $laptop_id)
     {
-        $salarie = Salarie::findOrFail($data['salarie_id']);
-        if ($salarie->ordinateurs()->detach($ord_id))
-            $this->ChangePCAffecterState($ord_id, 'Non');
 
+        $salary = Salary::findOrFail($data['salary_id']);
+        if ($salary->affected_laptops()->detach($laptop_id))
+            $this->ChangePCAffecterState($laptop_id, 'Non');
         return ['msg' => 'Affectation Supprimer !'];
     }
 
     public function get_SN_Salaries(): array
     {
-        $salaries = Salarie::withoutTrashed()->get();
-        $ordinateurs = Ordinateur::withoutTrashed()->orderBy('affecter', 'ASC')->get();
-        return compact('salaries', 'ordinateurs');
+        $salaries = Salary::withoutTrashed()->get();
+        $laptops = Laptop::withoutTrashed()->orderBy('affecter', 'ASC')->get();
+        return compact('salaries', 'laptops');
     }
+
+    public function RestoreAffectation($data)
+    {
+        $this->CreateAffectation($data);
+        $salary = Salary::findOrFail($data['salary_id']);
+        $salary->returned_laptops()->detach($data['laptop_id']);
+        return ['msg' => 'Affectation Restaurer !'];
+    }
+
 
     private function ChangePCAffecterState($id, $state)
     {
-        $ordinateur = Ordinateur::findOrFail($id);
-        $ordinateur->update(['affecter' => $state]);
+        $laptops = Laptop::findOrFail($id);
+        $laptops->update(['affecter' => $state]);
     }
 
 }

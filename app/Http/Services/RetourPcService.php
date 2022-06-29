@@ -6,8 +6,8 @@ namespace App\Http\Services;
 
 use App\Http\Resources\RetoursPcResource;
 use App\Libs\UtilsFunctions;
-use App\Models\Ordinateur;
-use App\Models\Salarie;
+use App\Models\Laptop;
+use App\Models\Salary;
 
 class RetourPcService
 {
@@ -19,41 +19,41 @@ class RetourPcService
 
     public function getRetour()
     {
-        return RetoursPcResource::collection(Salarie::whereHas('ordinateurs_rendus')->with('ordinateurs_rendus')->withCount('ordinateurs_rendus')->get());
+        return RetoursPcResource::collection(Salary::whereHas('returned_laptops')->with('returned_laptops')->withCount('returned_laptops')->get());
     }
 
     public function CreateRetourPC($data)
     {
-        $ordinateur_id = $data['ordinateur_id'];
-        $salarie = Salarie::findOrFail($data['salarie_id']);
-        if ($salarie->ordinateurs()->detach($ordinateur_id))
-        $salarie->ordinateurs_rendus()->attach($ordinateur_id, ['affected_at' => $this->UF->TimeFromString($data['affected_at']),
-            'rendu_at' => $this->UF->TimeFromString(now())]);
-        $this->ChangePCAffecterState($ordinateur_id, 'Non');
-        return ['msg' => 'Element Ajouter !'];
+        $laptop_id = $data['laptop_id'];
+        $salary = Salary::findOrFail($data['salary_id']);
+        $salary->affected_laptops()->detach($laptop_id);
+        $salary->returned_laptops()->attach($laptop_id, ['affected_at' => $this->UF->dateFormString($data['affected_at']),
+            'rendu_at' => $this->UF->dateFormString(now()), 'projet_id' => $data['projet_id'], 'raison' => $data['raison'] ?? 'Dimission' ]);
+        $this->ChangePCAffecterState($laptop_id, 'Non');
+        return ['msg' => 'Element Ajouter !' ];
     }
 
-    public function UpdateRetourPc($data, $salarie_id)
+    public function UpdateRetourPc($data, $salary_id)
     {
-        $ordinateur_id = $data['ordinateur_id'];
-        $old_ordinateur_id = $data['old_ordinateur_id'];
-        $salarie = Salarie::findOrFail($salarie_id);
+        $laptop_id = $data['laptop_id'];
+        $old_laptop_id = $data['old_laptop_id'];
+        $salary = Salary::findOrFail($salary_id);
 
-        if ($ordinateur_id !== $old_ordinateur_id) {
-            $salarie->ordinateurs()->detach([$old_ordinateur_id]);
+        if ($laptop_id !== $old_laptop_id) {
+            $salary->affected_laptops()->detach([$old_laptop_id]);
 
-            $this->ChangePCAffecterState($old_ordinateur_id, 'Non');
+            $this->ChangePCAffecterState($old_laptop_id, 'Non');
 
-            $salarie->ordinateurs_rendus()->attach($ordinateur_id, [
+            $salary->returned_laptops()->attach($laptop_id, [
                 'affected_at' => $this->UF->TimeFromString($data['affected_at']),
                 'rendu_at' => $this->UF->TimeFromString(now()),
                 'remarque' => $data['remarque'] ?? null]);
 
-            $this->ChangePCAffecterState($ordinateur_id, 'Oui');
+            $this->ChangePCAffecterState($laptop_id, 'Oui');
 
         } else {
-            $salarie->ordinateurs_rendus()->syncWithoutDetaching([
-                $ordinateur_id => [
+            $salary->returned_laptops()->syncWithoutDetaching([
+                $laptop_id => [
                     'affected_at' => $this->UF->TimeFromString($data['affected_at']),
                     'rendu_at' => $this->UF->TimeFromString(now()),
                     'remarque' => $data['remarque'] ?? null]
@@ -62,16 +62,16 @@ class RetourPcService
         return ['msg' => 'Element Modifier !'];
     }
 
-    public function DeleteRetourPc($data, $salarie_id)
+    public function DeleteRetourPc($data, $laptop_id)
     {
-        $salarie = Salarie::findOrFail($salarie_id);
-        if ($salarie->ordinateurs_rendus()->detach($data['ordinateur_id']))
+        $salary = Salary::findOrFail($data['salary_id']);
+        if ($salary->returned_laptops()->detach($laptop_id))
             return ['msg' => 'Element Supprimer !'];
     }
 
     private function ChangePCAffecterState($id, $state)
     {
-        $ordinateur = Ordinateur::findOrFail($id);
-        $ordinateur->update(['affecter' => $state]);
+        $laptops = Laptop::findOrFail($id);
+        $laptops->update(['affecter' => $state]);
     }
 }

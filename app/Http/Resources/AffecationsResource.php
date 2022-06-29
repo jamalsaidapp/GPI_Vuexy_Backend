@@ -16,21 +16,22 @@ class AffecationsResource extends JsonResource
     {
         return [
             'full_name' => $this->full_name,
-            'ordinateurs_count' => $this->ordinateurs_count,
-            'sn' => $this->sn($this->ordinateurs),
-            'ordinateur' => $this->ordinateurs,
-            'projets' => $this->projets($this->projets),
+            'affected_laptops_count' => $this->affected_laptops_count,
+            'sn' => $this->sn($this->affected_laptops),
+            'affected_laptops' => $this->affected_laptops,
+            'projets' => $this->projets($this->affected_projets),
+            'affected_projets' => $this->affected_projets,
             'created_at' => $this->created_at,
             'created_at' => $this->created_at,
         ];
     }
 
-    public function sn($ordinateurs): string
+    public function sn($laptops): string
     {
         $series = [];
-        $count = count($ordinateurs);
+        $count = count($laptops);
         for ($i = 0; $i < $count; $i++) {
-            $series[] = $ordinateurs[$i]->sn;
+            $series[] = $laptops[$i]->sn;
         }
         return implode(" , ", $series);;
     }

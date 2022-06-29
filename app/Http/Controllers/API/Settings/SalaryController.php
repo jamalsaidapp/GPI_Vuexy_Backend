@@ -3,21 +3,21 @@
 namespace App\Http\Controllers\API\Settings;
 
 use App\Http\Controllers\Controller;
-use App\Models\Salarie;
+use App\Models\Salary;
 use Illuminate\Http\Request;
 
-class SalarieController extends Controller
+class SalaryController extends Controller
 {
     public function index()
     {
-        $salaries = Salarie::with(['ordinateurs', 'user', 'phone'])->withCount('ordinateurs')->withTrashed()->get();
+        $salaries = Salary::with(['affected_laptops', 'user', 'phone'])->withCount('affected_laptops')->withTrashed()->get();
 
         return collect($salaries)->map(function ($item) {
             return [
                 'id' => $item->id,
                 'full_name' => $item->full_name,
                 'cin' => $item->cin,
-                'ordinateurs_count' => $item->ordinateurs_count,
+                'affected_laptops_count' => $item->affected_laptops_count,
                 'phone_fix' => $item->phone->phonenumber ?? '***',
                 'phone_primary' => $item->phone->primary ?? '',
                 'is_user' => $item->is_user,
@@ -39,12 +39,12 @@ class SalarieController extends Controller
            'phone_id' => 'sometimes',
        ]);
 
-         Salarie::create($data);
-        return ['msg' => 'Salarie Ajouter !'];
+         Salary::create($data);
+        return ['msg' => 'Salary Ajouter !'];
 
     }
 
-    public function update(Request $request,Salarie $salary)
+    public function update(Request $request,Salary $salary)
     {
         $data = $request->validate([
             'full_name' => 'required|unique:salaries,full_name,'.$salary->id,
@@ -54,19 +54,21 @@ class SalarieController extends Controller
             'phone_id' => 'sometimes',
         ]);
         $salary->update($data);
-        return ['msg' => 'Salarie Modifier !'];
+        return ['msg' => 'Salary Modifier !'];
     }
 
-    public function destroy(Salarie $salary)
+    public function destroy(Request $request, Salary $salary)
     {
-        $salary->delete();
-
-        return ['msg' => 'Salarie Supprimer !'];
+        if($request->user()->hasPerm('Delete Salaries')){
+            return $salary->secureDelete('affected_laptops', 'ce salarie il a un PC Affecter');
+           }else{
+            return response(['msg' => 'Unautorized Action !'], 403);
+        }
     }
 
     public function restore($id)
     {
-        Salarie::onlyTrashed()->where('id', $id)->restore();
-        return ['msg' => 'Salarie Restaurer !'];
+        Salary::onlyTrashed()->where('id', $id)->restore();
+        return ['msg' => 'Salary Restaurer !'];
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use App\Models\Ordinateur;
-use App\Models\Salarie;
+use App\Models\Laptop;
+use App\Models\Salary;
 use Illuminate\Database\Seeder;
 
 class OrdinateurSeeder extends Seeder
@@ -15,10 +15,10 @@ class OrdinateurSeeder extends Seeder
      */
     public function run()
     {
-         \App\Models\Ordinateur::factory(20)->create();
-         foreach (Ordinateur::all() as $Ordinateur){
-             $salarie = Salarie::inRandomOrder()->take(rand(1,4))->pluck('id');
-             $Ordinateur->salaries()->attach($salarie);
+         \App\Models\Laptop::factory(20)->create();
+         foreach (Laptop::all() as $Laptop){
+             $salary = Salary::inRandomOrder()->take(rand(1,4))->pluck('id');
+             $Laptop->salaries()->attach($salary);
          }
     }
 }

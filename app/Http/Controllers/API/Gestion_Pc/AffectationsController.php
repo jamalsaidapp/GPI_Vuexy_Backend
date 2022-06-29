@@ -22,9 +22,9 @@ class AffectationsController extends Controller
         return $this->affectationPcService->getAffectations();
     }
 
-    public function show($Salarie_id)
+    public function show($salary_id)
     {
-        return $this->affectationPcService->ShowAffectation($Salarie_id);
+        return $this->affectationPcService->ShowAffectation($salary_id);
     }
 
     public function store(AffectationRequest $request)
@@ -32,14 +32,19 @@ class AffectationsController extends Controller
         return $this->affectationPcService->CreateAffectation($request->validated());
     }
 
-    public function update(AffectationRequest $request, $salarie_id)
+    public function update(AffectationRequest $request, $salary_id)
     {
-        return $this->affectationPcService->UpdateAffectation($request->validated(),$salarie_id);
+        return $this->affectationPcService->UpdateAffectation($request->validated(),$salary_id);
     }
 
-    public function destroy(Request $request, $ord_id)
+    public function destroy(Request $request, $laptop_id)
     {
-        return $this->affectationPcService->DeleteAffectation($request->only('salarie_id'),$ord_id);
+        return $this->affectationPcService->DeleteAffectation($request->only('salary_id'),$laptop_id);
+    }
+
+    public function restore(AffectationRequest $request)
+    {
+        return $this->affectationPcService->RestoreAffectation($request->validated());
     }
 
     public function get_SN_Salaries(): array

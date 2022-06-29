@@ -5,10 +5,10 @@ namespace App\Http\Controllers\API\Gestion_Pc;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Retour\RetourRequest;
 use App\Http\Services\RetourPcService;
-use App\Models\Ordinateur;
+use App\Models\Laptop;
 use Illuminate\Http\Request;
 
-class RetoursController extends Controller
+class RetourController extends Controller
 {
     protected $retourPcService;
 

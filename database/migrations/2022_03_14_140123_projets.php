@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class SalarieHasRetour extends Migration
+class Projet extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,15 @@ class SalarieHasRetour extends Migration
      */
     public function up()
     {
-        Schema::create('retour_salarie', function (Blueprint $table) {
-            $table->foreignId('ordinateur_id')->constrained();
-            $table->foreignId('salarie_id')->constrained();
-            $table->dateTime('affected_at');
-            $table->dateTime('rendu_at');
-            $table->string('remarque');
+        Schema::create('projets', function (Blueprint $table) {
+            $table->id();
+            $table->string('name')->unique();
+            $table->string('code')->unique();
+            $table->string('cp')->unique();
             $table->string('created_by')->nullable();
             $table->string('updated_by')->nullable();
+            $table->string('deleted_by')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
@@ -32,6 +33,6 @@ class SalarieHasRetour extends Migration
      */
     public function down()
     {
-        Schema::drop('retour_salarie');
+        Schema::dropIfExists('projets');
     }
 }

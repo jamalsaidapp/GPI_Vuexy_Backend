@@ -3,6 +3,8 @@
 namespace App\Http\Requests\Retour;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+
 
 class RetourRequest extends FormRequest
 {
@@ -23,13 +25,17 @@ class RetourRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [];
-
-        $rules['ordinateur_id'] = 'required' ;
-        $rules['salarie_id'] = 'required';
-        $rules['affected_at'] = 'required|date';
-        $rules['rendu_at'] = 'sometimes|date';
-        $rules['remarque'] = 'sometimes';
+        $rules = [
+            'laptop_id' => ['required', Rule::unique('return_salary')->where(function ($query) {
+                return $query->where('laptop_id', $this->laptop_id)->where('salary_id', $this->salary_id);
+            })],
+            'salary_id' => 'required',
+            'projet_id' => 'required',
+            'affected_at' => 'required|date_format:d/m/Y',
+            'rendu_at' => 'sometimes|date_format:d/m/Y',
+            'remarque' => 'sometimes',
+            'raison' => 'sometimes',
+        ];
 
         return $rules;
     }

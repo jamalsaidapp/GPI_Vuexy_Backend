@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\CheckUserPermissions;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -14,7 +15,7 @@ use Wildside\Userstamps\Userstamps;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasRoles, HasApiTokens, SoftDeletes, Userstamps;
+    use HasFactory, Notifiable, HasRoles, HasApiTokens, SoftDeletes, Userstamps, CheckUserPermissions;
 
     Protected $guard_name ='sanctum';
 

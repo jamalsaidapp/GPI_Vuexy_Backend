@@ -33,18 +33,18 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::apiResource('permissions', App\Http\Controllers\API\Settings\PermissionController::class);
     Route::post('set_user_permissions/{id}', [App\Http\Controllers\API\Settings\PermissionController::class, 'setUserPermissions']);
 
-    Route::apiResource('salaries', App\Http\Controllers\API\Settings\SalarieController::class);
+    Route::apiResource('salaries', App\Http\Controllers\API\Settings\SalaryController::class);
     Route::apiResource('phones', App\Http\Controllers\API\Settings\PhoneController::class);
     Route::apiResource('projets', App\Http\Controllers\API\Settings\ProjetController::class);
-    Route::apiResource('ordinateurs', App\Http\Controllers\API\Gestion_Pc\OrdinateurController::class);
+    Route::apiResource('laptops', App\Http\Controllers\API\Gestion_Pc\LaptopController::class);
     Route::apiResource('affectations', App\Http\Controllers\API\Gestion_Pc\AffectationsController::class);
-    Route::apiResource('retours', App\Http\Controllers\API\Gestion_Pc\RetoursController::class);
+    Route::apiResource('retours', App\Http\Controllers\API\Gestion_Pc\RetourController::class);
     Route::get('get_sn_salaries', [App\Http\Controllers\API\Gestion_Pc\AffectationsController::class, 'get_SN_Salaries']);
 
     //restores FN
     Route::post('restore_user/{id}', [App\Http\Controllers\API\Settings\UserController::class, 'restore']);
-    Route::post('restore_ordinateur/{id}', [App\Http\Controllers\API\Gestion_Pc\OrdinateurController::class, 'restore']);
-    Route::post('restore_affectation_pc/{id}', [App\Http\Controllers\API\Gestion_Pc\AffectationsController::class, 'restore']);
-    Route::post('restore_salarie/{id}', [App\Http\Controllers\API\Settings\SalarieController::class, 'restore']);
+    Route::post('restore_laptop/{id}', [App\Http\Controllers\API\Gestion_Pc\LaptopController::class, 'restore']);
+    Route::post('restore_affectation_pc', [App\Http\Controllers\API\Gestion_Pc\AffectationsController::class, 'restore']);
+    Route::post('restore_salary/{id}', [App\Http\Controllers\API\Settings\SalaryController::class, 'restore']);
 });
 

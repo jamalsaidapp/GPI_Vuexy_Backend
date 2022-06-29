@@ -7,15 +7,15 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 use Illuminate\Support\Facades\Auth;
 use Wildside\Userstamps\Userstamps;
 
-class Rendu extends Pivot
+class Retour extends Pivot
 {
     use HasFactory, Userstamps;
 
     protected $casts = [
-        'created_at' => 'datetime:m/d/Y',
-        'affected_at' => 'datetime:Y-m-d',
-        'rendu_at' => 'datetime:Y-m-d',
-        'updated_at' => 'datetime:m/d/Y',
+        'created_at' => 'datetime:d/m/Y',
+        'affected_at' => 'datetime:d/m/Y',
+        'rendu_at' => 'datetime:d/m/Y',
+        'updated_at' => 'datetime:d/m/Y',
 
     ];
 

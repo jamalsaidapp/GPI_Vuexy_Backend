@@ -20,9 +20,12 @@ class AuthController extends Controller
 
             return response(['message' => "Les informations d'identification fournies sont incorrectes."], 403);
         }
+
+            $full_name = $user->getUserFullName();
+            $email = $user->email;
             $role = $user->getRoleNames()->first();
             $ability = $user->getAllPermissions();
-            $userData = compact('user', 'role' , 'ability');
+            $userData = compact('full_name', 'email', 'role' , 'ability');
             $accessToken = $user->createToken('accessToken')->plainTextToken;
 
         return response(compact('userData', 'accessToken'), 200);
@@ -49,4 +52,5 @@ class AuthController extends Controller
         // return response(compact('userData', 'accessToken'), 200) ;
 
     }
+
 }

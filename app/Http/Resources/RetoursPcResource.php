@@ -16,20 +16,33 @@ class RetoursPcResource extends JsonResource
     {
         return [
             'full_name' => $this->full_name,
-            'ordinateurs_count' => $this->ordinateurs_rendus_count,
-            'sn' => $this->sn($this->ordinateurs_rendus),
-            'ordinateur' => $this->ordinateurs_rendus,
-
+            'returned_laptops_count' => $this->returned_laptops_count,
+            'sn' => $this->sn($this->returned_laptops),
+            'returned_laptops' => $this->returned_laptops,
+            'projets' => $this->projets($this->returned_projets),
+            'returned_projets' => $this->returned_projets,
+            'created_at' => $this->created_at,
+            'created_at' => $this->created_at,
         ];
     }
 
-    public function sn($ordinateurs): string
+    public function sn($laptops): string
     {
         $series = [];
-        $count = count($ordinateurs);
+        $count = count($laptops);
         for ($i = 0; $i < $count; $i++) {
-            $series[] = $ordinateurs[$i]->sn;
+            $series[] = $laptops[$i]->sn;
         }
         return implode(" , ", $series);;
+    }
+
+    public function projets($projets): string
+    {
+        $names = [];
+        $count = count($projets);
+        for ($i = 0; $i < $count; $i++) {
+            $names[] = $projets[$i]->name;
+        }
+        return implode(" , ", $names);;
     }
 }

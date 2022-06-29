@@ -3,7 +3,8 @@
 namespace App\Http\Requests\Affectation;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+
 
 class AffectationRequest extends FormRequest
 {
@@ -24,13 +25,16 @@ class AffectationRequest extends FormRequest
      */
     public function rules(): array
     {
-        $rules = [];
 
-        $rules['ordinateur_id'] = 'required';
-        $rules['projet_id'] = 'required';
-        $rules['salarie_id'] = 'required';
-        $rules['affected_at'] = 'required|date';
-        $rules['remarque'] = 'sometimes';
+        $rules = [
+            'laptop_id' => ['required', Rule::unique('laptop_salary')->where(function ($query) {
+                return $query->where('laptop_id', $this->laptop_id);
+            })],
+            'salary_id' => 'required',
+            'projet_id' => 'required',
+            'affected_at' => 'required|date_format:d/m/Y',
+            'remarque' => 'sometimes',
+        ];
 
         return $rules;
     }

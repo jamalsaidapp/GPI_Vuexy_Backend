@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Ordinateur;
+namespace App\Http\Requests\Laptop;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateOrdinateur extends FormRequest
+class CreateLaptop extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class CreateOrdinateur extends FormRequest
     {
         return [
             'marque' => 'required',
-            'sn' => 'required|unique:ordinateurs',
+            'sn' => 'required|unique:laptops',
             'reference' => 'required',
             'ram' => 'required',
             'processor' => 'required',

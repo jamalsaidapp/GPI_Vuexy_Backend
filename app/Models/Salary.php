@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Wildside\Userstamps\Userstamps;
+use App\Traits\SecureDelete;
 
-class Salarie extends Model
+class Salary extends Model
 {
-    use HasFactory, Userstamps, SoftDeletes;
+    use HasFactory, Userstamps, SoftDeletes, SecureDelete;
 
     protected $fillable = [
         'full_name', 'user_id', 'is_user', 'phone_id', 'cin'
@@ -22,20 +23,26 @@ class Salarie extends Model
         'updated_at' => 'datetime:m/d/Y',
     ];
 
-    public function ordinateurs()
+
+    public function affected_laptops()
     {
-        return $this->belongsToMany(Ordinateur::class)->using(Affectation::class)
-            ->withTimestamps()->withPivot(['projet_id','affected_at','remarque','created_by','updated_by']);
+        return $this->belongsToMany(Laptop::class, 'laptop_salary')->withTimestamps()
+            ->withPivot(['projet_id', 'affected_at', 'remarque', 'created_by', 'updated_by'])->using(Affectation::class);
     }
-    public function ordinateurs_rendus()
+    public function returned_laptops()
     {
-        return $this->belongsToMany(Ordinateur::class,'retour_salarie')->using(Rendu::class)
-            ->withTimestamps()->withPivot(['affected_at','rendu_at','remarque','created_by','updated_by']);
+        return $this->belongsToMany(Laptop::class, 'return_salary')->withTimestamps()
+            ->withPivot(['affected_at', 'projet_id', 'rendu_at', 'raison', 'remarque', 'created_by', 'updated_by'])->using(Retour::class);
     }
-    public function projets()
+
+    public function affected_projets()
     {
-        return $this->belongsToMany(Projet::class,'ordinateur_salarie')->using(Affectation::class)
-            ->withTimestamps()->withPivot(['created_by','updated_by']);
+        return $this->belongsToMany(Projet::class, 'laptop_salary');
+    }
+
+    public function returned_projets()
+    {
+        return $this->belongsToMany(Projet::class, 'return_salary');
     }
 
     public function user()
@@ -47,9 +54,6 @@ class Salarie extends Model
     {
         return $this->belongsTo(Phone::class);
     }
-
-
-
 
 
     public function setCreatedByAttribute()

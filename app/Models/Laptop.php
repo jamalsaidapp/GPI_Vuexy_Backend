@@ -7,10 +7,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Auth;
 use Wildside\Userstamps\Userstamps;
+use App\Traits\SecureDelete;
 
-class Ordinateur extends Model
+class Laptop extends Model
 {
-    use HasFactory, SoftDeletes, Userstamps;
+    use HasFactory, SoftDeletes, Userstamps, SecureDelete;
 
     protected $fillable = [
 
@@ -18,12 +19,14 @@ class Ordinateur extends Model
     ];
 
     protected $casts = [
-        'created_at' => 'datetime:m/d/Y',
+        'created_at' => 'datetime:d/m/Y',
+        'updated_at' => 'datetime:d/m/Y',
+        'deleted_at' => 'datetime:d/m/Y',
     ];
 
     public function salaries()
     {
-        return $this->belongsToMany(Salarie::class);
+        return $this->belongsToMany(Salary::class);
     }
 
     public function setCreatedByAttribute()

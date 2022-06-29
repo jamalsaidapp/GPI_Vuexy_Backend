@@ -10,7 +10,7 @@ class RoleService
 {
   public function getRoles()
   {
-    return Role::with('permissions')->get();
+    return Role::with('permissions')->withCount('permissions')->get();
   }
 
   public function CreateRole($data)

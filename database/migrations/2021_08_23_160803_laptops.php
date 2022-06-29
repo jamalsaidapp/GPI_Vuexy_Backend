@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class Ordinateurs extends Migration
+class Laptops extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class Ordinateurs extends Migration
      */
     public function up()
     {
-        Schema::create('ordinateurs', function (Blueprint $table) {
+        Schema::create('laptops', function (Blueprint $table) {
             $table->id();
             $table->string('marque');
             $table->string('reference');
@@ -24,9 +24,9 @@ class Ordinateurs extends Migration
             $table->string('state');
             $table->string('affecter');
             $table->string('remarque')->nullable();
-            $table->unsignedBigInteger('created_by')->nullable();
-            $table->unsignedBigInteger('updated_by')->nullable();
-            $table->unsignedBigInteger('deleted_by')->nullable();
+            $table->string('created_by')->nullable();
+            $table->string('updated_by')->nullable();
+            $table->string('deleted_by')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });
@@ -39,6 +39,6 @@ class Ordinateurs extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ordinateurs');
+        Schema::dropIfExists('laptops');
     }
 }

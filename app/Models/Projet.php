@@ -3,18 +3,23 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\Pivot;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\Eloquent\Model;
 use Wildside\Userstamps\Userstamps;
+use Illuminate\Support\Facades\Auth;
 
-class Affectation  extends Pivot
+
+class Projet extends Model
 {
     use HasFactory, Userstamps;
 
+    protected $fillable = ['name', 'code'];
+
     protected $casts = [
-        'created_at' => 'datetime:d/m/Y',
-        'affected_at' => 'datetime:d/m/Y',
-        'updated_at' => 'datetime:d/m/Y',
+        'created_at' => 'datetime:m/d/Y',
+        'affected_at' => 'datetime:Y-m-d',
+        'rendu_at' => 'datetime:Y-m-d',
+        'updated_at' => 'datetime:m/d/Y',
+
     ];
 
     public function setCreatedByAttribute()
@@ -26,7 +31,4 @@ class Affectation  extends Pivot
     {
         $this->attributes['updated_by'] = Auth::user()->getUserFullName();
     }
-
-
-
 }

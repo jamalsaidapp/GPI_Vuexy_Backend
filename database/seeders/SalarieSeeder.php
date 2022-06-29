@@ -13,7 +13,7 @@ class SalarieSeeder extends Seeder
      */
     public function run()
     {
-        \App\Models\Salarie::factory(20)->create();
+        \App\Models\Salary::factory(20)->create();
 
     }
 }

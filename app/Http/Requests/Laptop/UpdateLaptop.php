@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Ordinateur;
+namespace App\Http\Requests\Laptop;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateOrdinateur extends FormRequest
+class UpdateLaptop extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -25,7 +25,7 @@ class UpdateOrdinateur extends FormRequest
     {
         return [
             'marque' => 'required',
-            'sn' => 'required|unique:ordinateurs,sn,'.$this->id,
+            'sn' => 'required|unique:laptops,sn,'.$this->id,
             'reference' => 'required',
             'ram' => 'required',
             'processor' => 'required',
